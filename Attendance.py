@@ -7,17 +7,25 @@ def write_to_json(data, filename):
     f = open('attendance/'+filename, "w")
     json.dump(data, f)
     f.close()
-    
+
+# Write data to JSON file
+# input -> List of IDs present
+# output -> data to be written to JSON file
 def take_data(idmap):
     print("video is opening, make the students lined up!")
     barcodes = captureBarcodes()
+    
     res = []
     curr = datetime.datetime.now().time()
     time = curr.strftime("%H:%M")
     for b in barcodes:
+        if b not in idmap: continue
         res.append({"id": b, "name": idmap[b], "time": time})
     return res
 
+# Uses take_data() to write data to JSON
+# input -> void, its entry point to taking attendance
+# output -> JSON file for the class
 def take_attendance():
     dept = input("Department(short-form): ").upper()
     sem = "sem"+input("Semester(1-8): ")
@@ -35,6 +43,8 @@ def take_attendance():
     write_to_json(data, outfile)
     print("attendance taken successfully")
 
+#input-> void, starting point for report generation
+#output->csv report file
 def report():
     dept = input("Department(short-form): ").upper()
     sem = "sem"+input("Semester(1-8): ")
