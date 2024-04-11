@@ -212,7 +212,7 @@ entry_4.place(
 )
 
 button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
+    file=relative_to_assets("start.png"))
 button_1 = Button(
     image=button_image_1,
     borderwidth=0,
