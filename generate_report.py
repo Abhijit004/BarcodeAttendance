@@ -4,7 +4,7 @@ import json
 def generateReport(data, filename):
     field_names = ['id', 'name', 'time']
 
-    with open(filename, 'w', newline='') as csv_file:
+    with open('output/'+filename, 'w', newline='') as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
 
         # Write header
@@ -14,17 +14,18 @@ def generateReport(data, filename):
         for row in data:
             writer.writerow(row)
 
-    print(f"CSV file '{filename}' has been created successfully.")
+    print(f"CSV file 'output/{filename}' has been created successfully.")
 
-def grandReport(filename):
-    filename = filename+'.json'
+def grandReport(filename: str):
     currdir = os.getcwd()
-    files = os.listdir(currdir)
-    f = open(filename)
+    files = os.listdir(currdir+'/attendance')
+    r = filename.rfind('_')
+    f = open('idmap/'+filename[:r] +'.json')
     idmap = json.loads(f.read())
     f.close()
     idmap = sorted(idmap.items(), key = lambda x: x[0])
-    print('idmap\n', idmap)
+    # print('idmap\n', idmap)
+    print()
     res = []
     
     indexid, i = {}, 0
@@ -32,14 +33,46 @@ def grandReport(filename):
         res.append({"Reg No": id, "Name": name})
         indexid[id] = i
         i += 1
-        
-    print('res initial look\n', res)
-    print('index ID\n', indexid)
     
     for file in files:
-        if file.startswith(filename) and :
-            f = open(file, 'r')
+        if file.startswith(filename):
+            print(file)
+            f = open('attendance/'+file, 'r')
             data = json.loads(f.read())
+            # print('data\n', data, '\n')
+            f.close()
+            l, r = file.rfind('_')+1, file.rfind('.')
+            date = file[l:r]
+            for student in data:
+                if student["id"] in indexid:
+                    # print(student["id"])
+                    j = indexid[student["id"]]
+                    res[j][date] = "P"
             
-    print(files)
-grandReport('IT_sem4')
+            for row in res:
+                if date not in row:
+                    row[date] = 'A'
+                
+                
+                
+    # print(res)
+    totaldays = len(res[0])-2
+    for row in res:
+        row["Total"] = list(row.values()).count('P')
+        row["%"] = 100*row['Total']/totaldays
+        
+        
+    field_names = list(res[0].keys())
+
+    with open(f"output/{filename}.csv", 'w', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=field_names)
+
+        # Write header
+        writer.writeheader()
+
+        # Write rows
+        for row in res:
+            writer.writerow(row)
+
+    print(f"CSV file {filename} has been created successfully.")
+# grandReport('IT_sem4_IT2203')
