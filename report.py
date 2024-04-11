@@ -4,9 +4,9 @@ import json
 
 
 def generateReport(dept, sem, subject, date):
-    filename = dept + "_" + sem + "_" + subject + "_" + date + ".json"
+    filename = dept + "_" + sem + "_" + subject + "_" + date
     try:
-        jsonfile = open("attendance/" + filename, "r")
+        jsonfile = open("attendance/" + filename+".json", "r")
         data = json.loads(jsonfile.read())
         jsonfile.close()
     except:
@@ -15,7 +15,7 @@ def generateReport(dept, sem, subject, date):
 
     field_names = ["id", "name", "time"]
 
-    with open("output/" + filename, "w", newline="") as csv_file:
+    with open("output/" + filename+".csv", "w", newline="") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
 
         # Write header

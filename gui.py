@@ -199,9 +199,12 @@ def onclick_attendance():
     subject_text = subject.get()
     semester_text = semester.get()
     if not all([dept_text, subject_text, semester_text]):
-        open_popup("ALERT", "Fill up all data please!")
+        if not dept_text:empty = "department"
+        elif not subject_text:empty = "subject"
+        elif not semester_text:empty = "semester"
+        open_popup("ALERT", empty, "field is empty!")
     else:
-        print("Attendance Taking has started! Line up everyone.")
+        print("ATTENDANCE TAKING STARTED\n")
         take_attendance(dept_text, "sem"+semester_text, subject_text)
 
 attendance = Button(
@@ -224,9 +227,12 @@ def onclick_class_report():
     subject_text = subject.get()
     semester_text = semester.get()
     if not all([dept_text, subject_text, semester_text]):
-        open_popup("ALERT", "Fill up all data please!")
+        if not dept_text:empty = "department"
+        elif not subject_text:empty = "subject"
+        elif not semester_text:empty = "semester"
+        open_popup("ALERT", empty, "field is empty!")
     else:
-        print("Class report Generation")
+        print("STARTED CLASS REPORT GENERATION...")
         grandReport(dept_text, "sem"+semester_text, subject_text)
 
 button_image_2 = PhotoImage(
@@ -252,9 +258,13 @@ def onclick_day_report():
     subject_text = subject.get()
     semester_text = semester.get()
     if not all([date_text, dept_text, subject_text, semester_text]):
-        open_popup("ALERT", "Select date please!")
+        if not dept_text:empty = "department"
+        elif not subject_text:empty = "subject"
+        elif not semester_text:empty = "semester"
+        elif not date_text: empty = "date"
+        open_popup("ALERT", empty, "field is empty!")
     else:
-        print("Report generation for: ", date_text)
+        print("REPORT GENERATION FOR DATE:", date_text)
         generateReport(dept_text, "sem"+semester_text, subject_text, date_text)
 
 button_image_3 = PhotoImage(
