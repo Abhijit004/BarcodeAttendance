@@ -182,7 +182,7 @@ subject.place(
     height=33.0
 )
 
-semester_options = ["Option 1", "Option 2", "Option 3"]
+semester_options = [str(i) for i in range(1, 9)]
 semester = Combobox(
     values=semester_options,
     style="TCombobox",
@@ -198,10 +198,11 @@ def onclick_attendance():
     dept_text = department.get()
     subject_text = subject.get()
     semester_text = semester.get()
-    if dept_text=="" or subject_text=="" or semester_text=="":
+    if not all([dept_text, subject_text, semester_text]):
         open_popup("ALERT", "Fill up all data please!")
     else:
-        print("Start Working 1!!!")
+        print("Attendance Taking has started! Line up everyone.")
+        take_attendance(dept_text, "sem"+semester_text, subject_text)
 
 attendance = Button(
     image=button_image_1,
@@ -222,10 +223,11 @@ def onclick_class_report():
     dept_text = department.get()
     subject_text = subject.get()
     semester_text = semester.get()
-    if dept_text=="" or subject_text=="" or semester_text=="":
+    if not all([dept_text, subject_text, semester_text]):
         open_popup("ALERT", "Fill up all data please!")
     else:
-        print("Class report!!!!")
+        print("Class report Generation")
+        grandReport(dept_text, "sem"+semester_text, subject_text)
 
 button_image_2 = PhotoImage(
     file=relative_to_assets("button_2.png"))
@@ -246,10 +248,14 @@ class_report.place(
 
 def onclick_day_report():
     date_text = date.get()
-    if not date_text:
+    dept_text = department.get()
+    subject_text = subject.get()
+    semester_text = semester.get()
+    if not all([date_text, dept_text, subject_text, semester_text]):
         open_popup("ALERT", "Select date please!")
     else:
-        print("Generate report!!!", date_text)
+        print("Report generation for: ", date_text)
+        generateReport(dept_text, "sem"+semester_text, subject_text, date_text)
 
 button_image_3 = PhotoImage(
     file=relative_to_assets("button_3.png"))
