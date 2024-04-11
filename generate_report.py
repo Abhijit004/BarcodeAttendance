@@ -36,10 +36,10 @@ def grandReport(filename):
     print('res initial look\n', res)
     print('index ID\n', indexid)
     
-    for file in files:
-        if file.startswith(filename) and :
-            f = open(file, 'r')
-            data = json.loads(f.read())
+    # for file in files:
+    #     if file.startswith(filename) and :
+    #         f = open(file, 'r')
+    #         data = json.loads(f.read())
             
     print(files)
-grandReport('IT_sem4')
+# grandReport('IT_sem4')
