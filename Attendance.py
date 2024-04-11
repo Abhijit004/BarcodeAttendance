@@ -4,7 +4,7 @@ from generate_report import *
 from captureBarcodes import *
 
 def write_to_json(data, filename):
-    f = open(filename, "w")
+    f = open('attendance/'+filename, "w")
     json.dump(data, f)
     f.close()
 
@@ -33,7 +33,7 @@ def take_attendance():
     currdate = datetime.datetime.now().date()
     date = currdate.strftime("%d%B%Y")
     
-    idfile = open(dept+'_'+sem+'.json', 'r')
+    idfile = open('idmap/'+dept+'_'+sem+'.json', 'r')
     idmap = json.loads(idfile.read())
     idfile.close()
     
@@ -53,7 +53,7 @@ def report():
     outfile = dept+'_'+sem+'_'+subject+'_'+date+'.json'
     
     try:
-        jsonfile = open(outfile, 'r')
+        jsonfile = open('attendance/'+ outfile, 'r')
         data = json.loads(jsonfile.read())
         jsonfile.close()
     except:
