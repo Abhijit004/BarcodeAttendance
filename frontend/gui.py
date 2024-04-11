@@ -191,10 +191,10 @@ button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
 
 def onclick_attendance():
-    dept = department.get()
-    subject = subject.get()
-    semester = semester.get()
-    if dept=="" or subject=="" or semester=="":
+    dept_text = department.get()
+    subject_text = subject.get()
+    semester_text = semester.get()
+    if dept_text=="" or subject_text=="" or semester_text=="":
         open_popup("ALERT", "Fill up all data please!")
     else:
         print("Start Working 1!!!")
@@ -215,10 +215,10 @@ attendance.place(
 )
 
 def onclick_class_report():
-    dept = department.get()
-    subject = subject.get()
-    semester = semester.get()
-    if dept=="" or subject=="" or semester=="":
+    dept_text = department.get()
+    subject_text = subject.get()
+    semester_text = semester.get()
+    if dept_text=="" or subject_text=="" or semester_text=="":
         open_popup("ALERT", "Fill up all data please!")
     else:
         print("Class report!!!!")
@@ -241,11 +241,11 @@ class_report.place(
 )
 
 def onclick_day_report():
-    datetext = date.get()
-    if not datetext:
+    date_text = date.get()
+    if not date_text:
         open_popup("ALERT", "Select date please!")
     else:
-        print("Generate report!!!", datetext)
+        print("Generate report!!!", date_text)
 
 button_image_3 = PhotoImage(
     file=relative_to_assets("button_3.png"))
