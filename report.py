@@ -1,7 +1,4 @@
-import os
-import csv
-import json
-
+import os, csv, json
 
 def generateReport(dept, sem, subject, date):
     filename = dept + "_" + sem + "_" + subject + "_" + date + ".json"
@@ -13,7 +10,7 @@ def generateReport(dept, sem, subject, date):
         print(filename, "The requested file does not exist")
         return False
 
-    field_names = ["id", "name", "time"]
+    field_names = ["Reg No", "Name", "Time entered"]
 
     with open("output/" + filename, "w", newline="") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
@@ -35,7 +32,11 @@ def grandReport(dept, sem, subject):
     currdir = os.getcwd()
     files = os.listdir(currdir + "/attendance")
     r = filename.rfind("_")
-    f = open("idmap/" + filename[:r] + ".json")
+    try:
+        f = open("idmap/" + filename[:r] + ".json")
+    except:
+        print("The requested department's ID-NAME map has not been created.")
+        return
     idmap = json.loads(f.read())
     f.close()
     idmap = sorted(idmap.items(), key=lambda x: x[0])
@@ -49,9 +50,11 @@ def grandReport(dept, sem, subject):
         indexid[id] = i
         i += 1
 
+    no_files_exist = 1
     for file in files:
         if file.startswith(filename):
             print(file)
+            no_files_exist = 0
             f = open("attendance/" + file, "r")
             data = json.loads(f.read())
             # print('data\n', data, '\n')
@@ -69,6 +72,10 @@ def grandReport(dept, sem, subject):
                     row[date] = "A"
 
     # print(res)
+    if no_files_exist:
+        print("No data found.")
+        return
+    
     totaldays = len(res[0]) - 2
     for row in res:
         row["Total"] = list(row.values()).count("P")
