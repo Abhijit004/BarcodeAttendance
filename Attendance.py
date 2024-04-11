@@ -12,7 +12,7 @@ def write_to_json(data, filename):
 # output -> data to be written to JSON file
 def take_data(idmap):
     print("video is opening, make the students lined up!")
-    barcodes = captureBarcodes()
+    barcodes = captureBarcodes(idmap)
     
     res = []
     curr = datetime.datetime.now().time()
