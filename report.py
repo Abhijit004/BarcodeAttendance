@@ -10,7 +10,7 @@ def generateReport(dept, sem, subject, date):
         print(filename, "The requested file does not exist")
         return False
 
-    field_names = ["Reg No", "Name", "Time entered"]
+    field_names = ["Reg No", "Name", "Time Entered"]
 
     with open("output/" + filename+".csv", "w", newline="") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
@@ -20,7 +20,7 @@ def generateReport(dept, sem, subject, date):
 
         # Write rows
         for row in data:
-            writer.writerow(row)
+            writer.writerow({'Reg No': row['id'], 'Name': row['name'], 'Time Entered': row['time']})
 
     print(f"CSV file 'output/{filename}' has been created successfully.")
     return True
@@ -63,7 +63,7 @@ def grandReport(dept, sem, subject):
             date = file[l:r]
             for student in data:
                 if student["id"] in indexid:
-                    # print(student["id"])
+    
                     j = indexid[student["id"]]
                     res[j][date] = "P"
 
@@ -71,7 +71,6 @@ def grandReport(dept, sem, subject):
                 if date not in row:
                     row[date] = "A"
 
-    # print(res)
     if no_files_exist:
         print("No data found.")
         return
@@ -90,8 +89,7 @@ def grandReport(dept, sem, subject):
         writer.writeheader()
 
         # Write rows
-        for row in res:
-            writer.writerow(row)
+        writer.writerows(res)
 
     print(f"CSV file {filename} has been created successfully.")
 
