@@ -29,8 +29,8 @@ def take_attendance(dept, sem, subject):
     # dept = input("Department(short-form): ").upper()
     # sem = "sem"+input("Semester(1-8): ")
     # subject = input("Subject code: ")
-    currdate = datetime.datetime.now().date()
-    date = currdate.strftime("%d%B%Y")
+    current_date = datetime.date.today()
+    date = current_date.isoformat()
     
     idfile = open('idmap/'+dept+'_'+sem+'.json', 'r')
     idmap = json.loads(idfile.read())
