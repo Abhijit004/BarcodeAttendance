@@ -202,7 +202,7 @@ def onclick_attendance():
         if not dept_text:empty = "department"
         elif not subject_text:empty = "subject"
         elif not semester_text:empty = "semester"
-        open_popup("ALERT", empty, "field is empty!")
+        open_popup("ALERT", empty+ " field is empty!")
     else:
         print("ATTENDANCE TAKING STARTED\n")
         take_attendance(dept_text, "sem"+semester_text, subject_text)
@@ -230,7 +230,7 @@ def onclick_class_report():
         if not dept_text:empty = "department"
         elif not subject_text:empty = "subject"
         elif not semester_text:empty = "semester"
-        open_popup("ALERT", empty, "field is empty!")
+        open_popup("ALERT", empty+" field is empty!")
     else:
         print("STARTED CLASS REPORT GENERATION...")
         grandReport(dept_text, "sem"+semester_text, subject_text)
@@ -262,7 +262,7 @@ def onclick_day_report():
         elif not subject_text:empty = "subject"
         elif not semester_text:empty = "semester"
         elif not date_text: empty = "date"
-        open_popup("ALERT", empty, "field is empty!")
+        open_popup("ALERT", empty+ " field is empty!")
     else:
         print("REPORT GENERATION FOR DATE:", date_text)
         generateReport(dept_text, "sem"+semester_text, subject_text, date_text)
