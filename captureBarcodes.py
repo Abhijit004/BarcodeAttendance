@@ -15,7 +15,8 @@ def captureBarcodes(idmap):
             if ID not in res and ID in idmap: 
                 print(ID, "has been marked present")
             res.add(ID)
-        cv2.imshow('testing-code-scan', frame)
+        cv2.imshow('barcode-scanning', frame)
+        
         if cv2.waitKey(1) & 0xFF == ord('g'):
             cv2.destroyAllWindows()
             break

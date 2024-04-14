@@ -1,18 +1,11 @@
 from pathlib import Path
-# from tkinter import *
-# Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Toplevel, Label
 from tkinter.ttk import Combobox
 from tkcalendar import DateEntry
 from Attendance import take_attendance
 from report import *
 
-
 OUTPUT_PATH = Path(__file__).resolve().parent
-# ASSETS_PATH = OUTPUT_PATH.parent / "frontend" / "assets"
-# print(OUTPUT_PATH)
-# print(ASSETS_PATH)
-
 
 def relative_to_assets(path: str) -> Path:
     return OUTPUT_PATH / "assets" / Path(path)

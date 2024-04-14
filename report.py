@@ -14,11 +14,7 @@ def generateReport(dept, sem, subject, date):
 
     with open("output/" + filename+".csv", "w", newline="") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
-
-        # Write header
         writer.writeheader()
-
-        # Write rows
         for row in data:
             writer.writerow({'Reg No': row['id'], 'Name': row['name'], 'Time Entered': row['time']})
 
@@ -26,7 +22,6 @@ def generateReport(dept, sem, subject, date):
     return True
 
 
-# def grandReport(filename: str):
 def grandReport(dept, sem, subject):
     filename = dept + "_" + sem + "_" + subject
     currdir = os.getcwd()
@@ -84,14 +79,7 @@ def grandReport(dept, sem, subject):
 
     with open(f"output/{filename}.csv", "w", newline="") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
-
-        # Write header
         writer.writeheader()
-
-        # Write rows
         writer.writerows(res)
 
     print(f"CSV file {filename} has been created successfully.")
-
-
-# grandReport('IT_sem4_IT2203')

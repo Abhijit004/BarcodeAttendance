@@ -3,7 +3,20 @@ import datetime
 from captureBarcodes import *
 
 def write_to_json(data, filename):
+    try:
+        f = open('attendance/'+filename, "r")
+        prev = json.loads(f.read())
+        f.close()
+        print('prev',prev)
+    except:
+        prev = []
+        print("Making a new file...")
+    dataid = set([row["id"] for row in data])
+    for row in prev:
+        if row["id"] not in dataid:
+            data.append(row)
     f = open('attendance/'+filename, "w")
+    print('to write: ', data)
     json.dump(data, f)
     f.close()
 
@@ -26,9 +39,6 @@ def take_data(idmap):
 # input -> void, its entry point to taking attendance
 # output -> JSON file for the class
 def take_attendance(dept, sem, subject):
-    # dept = input("Department(short-form): ").upper()
-    # sem = "sem"+input("Semester(1-8): ")
-    # subject = input("Subject code: ")
     current_date = datetime.date.today()
     date = current_date.isoformat()
     
@@ -41,27 +51,3 @@ def take_attendance(dept, sem, subject):
     data = take_data(idmap)
     write_to_json(data, outfile)
     print("attendance taken successfully")
-
-#input-> void, starting point for report generation
-#output->csv report file
-# def small_report(dept, sem, subject, date):
-#     # dept = input("Department(short-form): ").upper()
-#     # sem = "sem"+input("Semester(1-8): ")
-#     # subject = input("Subject code: ")
-#     # date = input("date: (format: dd Mon yyyy)").replace(' ', '')
-#     outfile = dept+'_'+sem+'_'+subject+'_'+date+'.json'
-    
-#     try:
-#         jsonfile = open('attendance/'+ outfile, 'r')
-#         data = json.loads(jsonfile.read())
-#         jsonfile.close()
-#     except:
-#         print(outfile, "The requested file does not exist")
-#         return
-#     # generateReport(data, outfile[:-4]+'csv')
-
-
-# def start():
-#     print("welcome to barcode attendance!")
-#     y = input("take attendance(1) / generate report(2): ")
-#     take_attendance() if y == '1' else report()
