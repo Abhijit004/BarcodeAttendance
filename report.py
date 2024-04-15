@@ -8,7 +8,7 @@ def generateReport(dept, sem, subject, date):
         jsonfile.close()
     except:
         print(filename, "The requested file does not exist")
-        return False
+        return ("Failure", f"{filename}\nThe requested file\ndoes not exist")
 
     field_names = ["Reg No", "Name", "Time Entered"]
 
@@ -19,7 +19,7 @@ def generateReport(dept, sem, subject, date):
             writer.writerow({'Reg No': row['id'], 'Name': row['name'], 'Time Entered': row['time']})
 
     print(f"CSV file 'output/{filename}' has been created successfully.")
-    return True
+    return ("Success", f"{filename}'\nhas been created successfully.")
 
 
 def grandReport(dept, sem, subject):
@@ -31,7 +31,7 @@ def grandReport(dept, sem, subject):
         f = open("idmap/" + filename[:r] + ".json")
     except:
         print("The requested department's ID-NAME map has not been created.")
-        return
+        return ("Failure", f"{filename[:r] + '.json'}\nhas not been created.")
     idmap = json.loads(f.read())
     f.close()
     idmap = sorted(idmap.items(), key=lambda x: x[0])
@@ -68,7 +68,7 @@ def grandReport(dept, sem, subject):
 
     if no_files_exist:
         print("No data found.")
-        return
+        return ("No Data", "No data found.")
     
     totaldays = len(res[0]) - 2
     for row in res:
@@ -83,3 +83,4 @@ def grandReport(dept, sem, subject):
         writer.writerows(res)
 
     print(f"CSV file {filename} has been created successfully.")
+    return ("Sucess", f"CSV file {filename}\nhas been created\nsuccessfully.")

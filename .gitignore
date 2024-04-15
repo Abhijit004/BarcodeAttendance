@@ -1,8 +1,11 @@
 __pycache__
 try.py
+gui.py
+
 # Ignore all files folder
 output/*
 attendance/*
+assets/*
 
 # Except for the "output" and "attendance" folders itself
 !output/.gitkeep

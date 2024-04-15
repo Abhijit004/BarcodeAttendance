@@ -42,7 +42,11 @@ def take_attendance(dept, sem, subject):
     current_date = datetime.date.today()
     date = current_date.isoformat()
     
-    idfile = open('idmap/'+dept+'_'+sem+'.json', 'r')
+    try:
+        idfile = open('idmap/'+dept+'_'+sem+'.json', 'r')
+    except:
+        return ("Failure", f"{dept+'_'+sem+'.json'}\n has not been created.")
+    
     idmap = json.loads(idfile.read())
     idfile.close()
     
@@ -51,3 +55,4 @@ def take_attendance(dept, sem, subject):
     data = take_data(idmap)
     write_to_json(data, outfile)
     print("attendance taken successfully")
+    return ("Success", "Attendance taken successfully")

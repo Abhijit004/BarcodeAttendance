@@ -22,4 +22,5 @@ def captureBarcodes(idmap):
             break
     print("Following students are marked present\n")
     for student in res: print(student)
+    cap.release()
     return res
