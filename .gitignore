@@ -1,12 +1,16 @@
-__pycache__
-try.py
-gui.py
+# Ignore Python bytecode cache directory
+__pycache__/*
+.vscode/*
+# Ignore specific Python script files
+/try.py
+/gui.py
+/tempCodeRunnerFile.py
 
-# Ignore all files folder
-output/*
-attendance/*
-assets/*
+# Ignore all files inside these folders
+/output/*
+/attendance/*
+/assets/*
 
-# Except for the "output" and "attendance" folders itself
+# Except for the ".gitkeep" files inside these folders
 !output/.gitkeep
 !attendance/.gitkeep
