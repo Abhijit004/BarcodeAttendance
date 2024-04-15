@@ -1,8 +1,8 @@
 import customtkinter as CustomTk
 from PIL import Image
 
-# from Attendance import take_attendance
-# from report import *
+from Attendance import take_attendance
+from report import *
 
 # default settings and constants
 CustomTk.set_appearance_mode("System")
@@ -127,7 +127,6 @@ def onclick_attendance():
             dept_text, "sem" + semester_text, subject_text
         )
         open_popup(status, message)
-
 
 def onclick_class_report():
     dept_text = deptcb.get()

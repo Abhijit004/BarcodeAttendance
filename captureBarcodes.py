@@ -11,7 +11,8 @@ def captureBarcodes(idmap):
     while camera:
         success, frame = cap.read()
         for code in decode(frame):
-            ID = '2'+code.data.decode('utf-8')
+            ID = code.data.decode('utf-8')
+            if ID[0] != '2': ID = '2'+ID
             if ID not in res and ID in idmap: 
                 print(ID, "has been marked present")
             res.add(ID)
