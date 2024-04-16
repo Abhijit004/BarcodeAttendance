@@ -1,12 +1,12 @@
 import cv2
 from pyzbar.pyzbar import decode
 
-cap = cv2.VideoCapture(0)
-cap.set(3, 640)
-cap.set(4, 480)
-camera = True
 
 def captureBarcodes(idmap):
+    cap = cv2.VideoCapture(0)
+    cap.set(3, 640)
+    cap.set(4, 480)
+    camera = True
     res = set()
     while camera:
         success, frame = cap.read()

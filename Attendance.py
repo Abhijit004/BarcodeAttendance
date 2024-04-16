@@ -1,6 +1,5 @@
 import json
 import datetime
-from captureBarcodes import *
 
 def write_to_json(data, filename):
     try:
@@ -24,6 +23,7 @@ def write_to_json(data, filename):
 # input -> List of IDs present
 # output -> data to be written to JSON file
 def take_data(idmap):
+    from captureBarcodes import captureBarcodes
     print("video is opening, make the students lined up!")
     barcodes = captureBarcodes(idmap)
     
