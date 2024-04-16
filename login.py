@@ -3,8 +3,6 @@ from PIL import Image
 from popupMessage import OpenPopup
 
 set_default_color_theme("assets/gui-theme.json")
-# set_appearance_mode("light")
-
 
 class Login(CTk):
     def __init__(self):

@@ -1,39 +1,30 @@
 import json
 import datetime
 
-def write_to_json(data, filename):
+def write_to_json(data, date, filename):
     try:
         f = open('attendance/'+filename, "r")
-        prev = json.loads(f.read())
+        filedata = json.loads(f.read())
         f.close()
-        print('prev',prev)
+        print('prev',filedata)
     except:
-        prev = []
+        filedata = {}
         print("Making a new file...")
-    dataid = set([row["id"] for row in data])
-    for row in prev:
-        if row["id"] not in dataid:
-            data.append(row)
+    if date in filedata:
+        filedata[date].extend(data)
+    else:
+        filedata[date] = data
+    
     f = open('attendance/'+filename, "w")
-    print('to write: ', data)
-    json.dump(data, f)
+    print('to write: ', filedata)
+    json.dump(filedata, f)
     f.close()
 
-# Write data to JSON file
-# input -> List of IDs present
-# output -> data to be written to JSON file
 def take_data(idmap):
     from captureBarcodes import captureBarcodes
     print("video is opening, make the students lined up!")
     barcodes = captureBarcodes(idmap)
-    
-    res = []
-    curr = datetime.datetime.now().time()
-    time = curr.strftime("%H:%M")
-    for b in barcodes:
-        if b not in idmap: continue
-        res.append({"id": b, "name": idmap[b], "time": time})
-    return res
+    return list(barcodes)
 
 # Uses take_data() to write data to JSON
 # input -> void, its entry point to taking attendance
@@ -50,9 +41,9 @@ def take_attendance(dept, sem, subject):
     idmap = json.loads(idfile.read())
     idfile.close()
     
-    outfile = dept+'_'+sem+'_'+subject+'_'+date+'.json'
+    outfile = dept+'_'+sem+'_'+subject + '.json'
 
     data = take_data(idmap)
-    write_to_json(data, outfile)
+    write_to_json(data, date, outfile)
     print("attendance taken successfully")
     return ("Success", "Attendance taken successfully")
