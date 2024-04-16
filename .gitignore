@@ -9,7 +9,6 @@ __pycache__/*
 # Ignore all files inside these folders
 /output/*
 /attendance/*
-/assets/*
 
 # Except for the ".gitkeep" files inside these folders
 !output/.gitkeep

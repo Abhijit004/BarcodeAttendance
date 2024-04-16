@@ -6,7 +6,7 @@ from report import *
 
 # default settings and constants
 CustomTk.set_appearance_mode("System")
-CustomTk.set_default_color_theme("gui-theme.json")
+CustomTk.set_default_color_theme("assets/gui-theme.json")
 dept_options = ["IT", "CST", "EE", "MET", "MIN", "MECH", "CIVIL", "AM"]
 subj_options = ["IT2201", "IT2202", "IT2203", "IT2204", "IT2205"]
 sem_options = [str(i) for i in range(1, 9)]
@@ -170,7 +170,7 @@ def onclick_day_report():
 
 
 # image
-logo = Image.open("Image.png")
+logo = Image.open("assets/Image.png")
 
 img = CustomTk.CTkFrame(app, fg_color=["#4a98e1", "#3a79bf"])
 img.grid(row=0, column=1, padx=(0, 5), pady=(10, 3), sticky="nsew", columnspan=2)
