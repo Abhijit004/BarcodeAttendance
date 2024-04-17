@@ -1,10 +1,11 @@
 import json
 import datetime
+from pickle import load, dump
 
 def write_to_json(data, date, filename):
     try:
-        f = open('attendance/'+filename, "r")
-        filedata = json.loads(f.read())
+        f = open('attendance/'+filename, "rb")
+        filedata = load(f)
         f.close()
         print('prev',filedata)
     except:
@@ -15,9 +16,9 @@ def write_to_json(data, date, filename):
     else:
         filedata[date] = data
     
-    f = open('attendance/'+filename, "w")
+    f = open('attendance/'+filename, "wb")
     print('to write: ', filedata)
-    json.dump(filedata, f)
+    dump(filedata, f)
     f.close()
 
 def take_data(idmap):
@@ -36,12 +37,12 @@ def take_attendance(dept, sem, subject):
     try:
         idfile = open('idmap/'+dept+'_'+sem+'.json', 'r')
     except:
-        return ("Failure", f"{dept+'_'+sem+'.json'}\n has not been created.")
+        return ("Failure", f"No Student-EnrollID file found\nfor {dept} {sem}")
     
     idmap = json.loads(idfile.read())
     idfile.close()
     
-    outfile = dept+'_'+sem+'_'+subject + '.json'
+    outfile = dept+'_'+sem+'_'+subject + '.attendinfo'
 
     data = take_data(idmap)
     write_to_json(data, date, outfile)

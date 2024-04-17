@@ -1,4 +1,5 @@
 import os, csv, json
+from pickle import load
 
 def generateReport(dept, sem, subject, date):
     # no longer needed now.
@@ -29,7 +30,7 @@ def grandReport(dept, sem, subject):
         f = open(f"idmap/{dept}_{sem}.json")
     except:
         print("The requested department's ID-NAME map has not been created.")
-        return ("Failure", f"idmap/{dept}_{sem}.json\nhas not been created.")
+        return ("Failure", f"No Student-EnrollID file found\nfor {dept} {sem}")
     idmap = json.loads(f.read())
     f.close()
     idmap = sorted(idmap.items(), key=lambda x: x[0])
@@ -41,8 +42,9 @@ def grandReport(dept, sem, subject):
         res.append({"Reg No": id, "Name": name})
 
     try:
-        classfile = open(f"attendance/{filename}.json")
-        classfiledata = json.loads(classfile.read())
+        classfile = open(f"attendance/{filename}.attendinfo", "rb")
+        classfiledata = load(classfile)
+        classfile.close()
     except:
         return ("Empty", "No data available!")
     totWorkingDays = len(classfiledata)
@@ -55,7 +57,7 @@ def grandReport(dept, sem, subject):
     
     for row in res:
         row["Total"] = list(row.values()).count("P")
-        row["Percentage"] = row["Total"] / totWorkingDays
+        row["Percentage"] = row["Total"]*100 / totWorkingDays
     field_names = list(res[0].keys())
 
     with open(f"output/{filename}.csv", "w", newline="") as csv_file:
