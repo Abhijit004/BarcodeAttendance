@@ -119,10 +119,5 @@ class Login(CTk):
         run = App(teacher[tid])
         run.mainloop()
         
-
-
-        
-
-
 app = Login()
 app.mainloop()

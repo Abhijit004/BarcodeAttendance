@@ -11,7 +11,7 @@ def write_to_json(data, date, filename):
         filedata = {}
         print("Making a new file...")
     if date in filedata:
-        filedata[date].extend(data)
+        filedata[date] = list(set(filedata[date] + data))
     else:
         filedata[date] = data
     

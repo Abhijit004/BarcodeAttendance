@@ -37,11 +37,8 @@ def grandReport(dept, sem, subject):
     print()
     res = []
 
-    indexid, i = {}, 0
     for id, name in idmap:
         res.append({"Reg No": id, "Name": name})
-        indexid[id] = i
-        i += 1
 
     try:
         classfile = open(f"attendance/{filename}.json")
@@ -65,4 +62,4 @@ def grandReport(dept, sem, subject):
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
         writer.writeheader()
         writer.writerows(res)
-    return ("Success", f"Report generation completed!\nin output/{filename}.json")
+    return ("Success", f"Report generation completed!\nin output/{filename}.csv")

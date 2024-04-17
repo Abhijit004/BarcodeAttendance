@@ -2,6 +2,7 @@
     "T1203":{
         "password": "1234",
         "name": "Mr. Prasun Ghosal",
+        "is-admin": true,
         "class":[
             ["IT", "4", "IT2203"],
             ["CST", "6", "CS1102"],
@@ -11,10 +12,11 @@
     "T1508":{
         "password": "5678",
         "name": "Mr. Abcd Efg",
+        "is-admin": false,
         "class":[
-            ["ETC", "4", "ET2203"],
+            ["IT", "4", "IT2203"],
             ["ETC", "7", "ET1102"],
-            ["IT", "6", "IT2107"]
+            ["CST", "6", "CST2107"]
         ]
     }
 }

@@ -1,7 +1,6 @@
 from customtkinter import *
 from PIL import Image
 from popupMessage import OpenPopup
-
 from Attendance import take_attendance
 from report import *
 
@@ -12,7 +11,7 @@ sem_options = [str(i) for i in range(1, 9)]
 
 
 class App(CTk):
-    def __init__(self, teacher, isAdmin=0):
+    def __init__(self, teacher):
         super().__init__()
         self.title("Barcode Attendance")
         self.geometry("645x434+400+150")
@@ -87,7 +86,7 @@ class App(CTk):
             text="ADD USER",
             height=35,
             font=CTkFont(weight="bold"),
-            state="normal" if isAdmin else "disabled",
+            state="normal" if teacher["is-admin"] else "disabled",
             text_color_disabled="#152d47",
             # command = self.addNewUser
         )
@@ -214,11 +213,12 @@ class App(CTk):
             valid = f"{dept_text} {semester_text} {subject_text}"
             for triplet in self.teacher["class"]:
                 existing = " ".join(triplet)
-                if valid !=existing:
-                    OpenPopup("INVALID", "Given class does not exist\nfor you. Select a different\ncombination.")
-                    return
-
-
+                print(valid, existing)
+                if valid == existing: 
+                    break
+            else:
+                OpenPopup("INVALID", "Given class does not exist\nfor you. Select a different\ncombination.")
+                return
 
             OpenPopup("Starting...", "Attendance taking started\nPress 'g' to Stop.")
             print("ATTENDANCE TAKING STARTED\n")
@@ -278,12 +278,13 @@ class App(CTk):
 
 
 sample = {
-        "password": "1234",
-        "name": "Mr. Prasun Ghosal",
+        "password": "5678",
+        "name": "Mr. Abcd Efg",
+        "is-admin": False,
         "class":[
             ["IT", "4", "IT2203"],
-            ["CST", "6", "CS1102"],
-            ["IT", "6", "IT2157"]
+            ["ETC", "7", "ET1102"],
+            ["CST", "6", "CST2107"]
         ]
     }
 
