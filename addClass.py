@@ -2,6 +2,7 @@ from customtkinter import *
 from PIL import Image
 from popupMessage import OpenPopup
 import json
+from pickle import load, dump
 
 set_default_color_theme("assets/gui-theme.json")
 
@@ -10,8 +11,7 @@ class AddClass(CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self._fg_color = "transparent"
-        # self.geometry("645x434+400+150")
-        # self.resizable(0, 0)
+        self._border_width=0
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -30,7 +30,7 @@ class AddClass(CTkFrame):
         self.leftlabel.grid(row=0, column=0)
 
         # right pane
-        self.frame = CTkFrame(self, corner_radius=10)
+        self.frame = CTkFrame(self, corner_radius=10, fg_color=["#dbdbdb", "#2b2b2b"])
         self.frame.grid(row=0, column=1, sticky="nsew", padx=(0, 5), pady=5)
         self.frame.grid_columnconfigure(0, weight=1)
 
@@ -176,6 +176,7 @@ class AddClass(CTkFrame):
         dept = self.deptInput.get()
         subject = self.subInput.get()
         sem = self.semInput.get()
+        admin = self.admin.get()
         if not tid:
             OpenPopup("ALERT", "Teacher ID missing")
             return
@@ -192,17 +193,17 @@ class AddClass(CTkFrame):
             OpenPopup("ALERT", "Semester missing")
             return
 
-        f = open("teacher.json", "r+")
-        allData = json.load(f)
+        f = open("bin.teacher", "rb+")
+        allData = load(f)
 
-        newData = {"password": "t123", "name": tname, "class": [[dept, sem, subject]]}
+        newData = {"password": "t123", "name": tname, "class": [[dept, sem, subject]], "is-admin": True if admin.lower()=="on" else False}
 
         if tid not in allData:
             allData[tid] = newData
         else:
             allData[tid]["class"].append([dept, sem, subject])
         f.seek(0)
-        json.dump(allData, f)
+        dump(allData, f)
         f.truncate()
         f.close()
         OpenPopup("SUCCESS", "Teacher data added\nSuccessfully!")

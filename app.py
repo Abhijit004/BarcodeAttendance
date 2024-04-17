@@ -307,10 +307,12 @@ class App(CTk):
     #         OpenPopup(status, message)
 
     def addNewUser(self):
-        add_class_window = CTkToplevel(self)
+        add_class_window = CTkToplevel(self, fg_color=["#F1F3F8", "#1E2024"])
         add_class_window.title("Add Class Window")
-        add_class_window.geometry("645x434+450+200")
+        add_class_window.geometry("650x435+450+200")
         add_class_window.resizable(0, 0)
+        add_class_window.grid_columnconfigure(0, weight=1)
+        add_class_window.grid_rowconfigure(0, weight=1)
         add_class_app = AddClass(add_class_window)
         add_class_app.grid(row=0, column=0)
         add_class_app.grab_set()
@@ -332,7 +334,7 @@ class App(CTk):
             "Student ID": self.sid.get(),
             "Department": self.deptcb.get(),
             "Subject": self.subjcb.get(),
-            "Semester": "sem"+self.semcb.get(),
+            "Semester": "sem" + self.semcb.get(),
             "Start date": self.startdate.get(),
             "End date": self.enddate.get(),
         }
@@ -358,5 +360,5 @@ sample = {
     "class": [["IT", "4", "IT9999"], ["ETC", "7", "ET1102"], ["CST", "6", "CST2107"]],
 }
 
-# app = App(sample)
-# app.mainloop()
+app = App(sample)
+app.mainloop()

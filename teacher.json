@@ -20,5 +20,5 @@
             ["IT", "6", "IT2107"]
         ]
     },
-    "SOmeone TCT": { "password": "t123", "name": "qwerty", "class": [["ME", "8", "IT2202"]] }
+    "newadmin": { "password": "t123", "name": "1234", "class": [["AE", "5", "IT2202"]], "is-admin": true }
 }
