@@ -1,12 +1,12 @@
-import json
-import datetime
+import json, datetime, os
+
 
 def write_to_json(data, date, filename):
     try:
-        f = open('attendance/'+filename, "r")
+        f = open("attendance/" + filename, "r")
         filedata = json.loads(f.read())
         f.close()
-        print('prev',filedata)
+        print("prev", filedata)
     except:
         filedata = {}
         print("Making a new file...")
@@ -14,17 +14,20 @@ def write_to_json(data, date, filename):
         filedata[date] = list(set(filedata[date] + data))
     else:
         filedata[date] = data
-    
-    f = open('attendance/'+filename, "w")
-    print('to write: ', filedata)
+
+    f = open("attendance/" + filename, "w")
+    print("to write: ", filedata)
     json.dump(filedata, f)
     f.close()
 
+
 def take_data(idmap):
     from captureBarcodes import captureBarcodes
+
     print("video is opening, make the students lined up!")
     barcodes = captureBarcodes(idmap)
     return list(barcodes)
+
 
 # Uses take_data() to write data to JSON
 # input -> void, its entry point to taking attendance
@@ -32,18 +35,64 @@ def take_data(idmap):
 def take_attendance(dept, sem, subject):
     current_date = datetime.date.today()
     date = current_date.isoformat()
-    
+
     try:
-        idfile = open('idmap/'+dept+'_'+sem+'.json', 'r')
+        idfile = open("idmap/" + dept + "_" + sem + ".json", "r")
     except:
         return ("Failure", f"{dept+'_'+sem+'.json'}\n has not been created.")
-    
+
     idmap = json.loads(idfile.read())
     idfile.close()
-    
-    outfile = dept+'_'+sem+'_'+subject + '.json'
+
+    outfile = dept + "_" + sem + "_" + subject + ".json"
 
     data = take_data(idmap)
     write_to_json(data, date, outfile)
     print("attendance taken successfully")
     return ("Success", "Attendance taken successfully")
+
+
+def nextdate(date):
+    currdate = datetime.datetime.strptime(date, "%Y-%m-%d")
+    nextdate = currdate + datetime.timedelta(days=1)
+    return nextdate.strftime("%Y-%m-%d")
+
+
+def approveLeave(id, dept, sem, subj, start, end):
+    try:
+        f = open(f"attendance/{dept}_{sem}_{subj}.json", "r+")
+    except:
+        return ("Failure", f"No record found for\n{dept}_{sem}_{subj}")
+    try:
+        idmap = open(f"idmap/{dept}_{sem}.json", "r")
+        ids = json.loads(idmap.read())
+        idmap.close()
+    except:
+        return ("Failure", "The Requested detartment's\nIDmap does not exist")
+    
+    if id not in ids:
+        return ("Failure", "No Student with this ID exists")
+    studentName = ids[id]
+    attendance = json.loads(f.read())
+    # f.close()
+    try:
+        start = datetime.datetime.strptime(start, '%Y-%m-%d')
+        end = datetime.datetime.strptime(end, '%Y-%m-%d')
+    except:
+        return ("Error", "Please enter correct date format")
+    for date in attendance:
+        d = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if start <= d <= end:
+            attendance[date].append(id)
+            print("added ", id, "to date", date)
+    
+    f.seek(0)
+    json.dump(attendance, f)
+    f.truncate()
+    f.close()
+    return ("Success", f"Leave for\n{studentName}\ngranted successfully.")
+        
+        
+        
+    
+    

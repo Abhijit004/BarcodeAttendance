@@ -1,7 +1,7 @@
 from customtkinter import *
 from PIL import Image
 from popupMessage import OpenPopup
-from Attendance import take_attendance
+from Attendance import take_attendance, approveLeave
 from report import *
 from addClass import AddClass
 
@@ -25,7 +25,7 @@ class App(CTk):
             dept.add(i[0])
             sem.add(i[1])
             subj.add(i[2])
-        
+
         dept_options = sorted(dept)
         sem_options = sorted(sem)
         subj_options = sorted(subj)
@@ -43,7 +43,7 @@ class App(CTk):
         )
         self.heading.grid(row=0, column=0)
         self.dept = CTkLabel(self.leftpane, text="Department")
-        self.dept.grid(row=1, column=0, padx=20, pady = (10, 0))
+        self.dept.grid(row=1, column=0, padx=20, pady=(10, 0))
         self.deptcb = CTkOptionMenu(
             self.leftpane,
             values=dept_options,
@@ -89,7 +89,7 @@ class App(CTk):
             font=CTkFont(weight="bold"),
             state="normal" if teacher["is-admin"] else "disabled",
             text_color_disabled="#152d47",
-            command = self.addNewUser
+            command=self.addNewUser,
         )
         self.adduser.grid(row=8, column=0, padx=20, pady=(84, 10), sticky="ew")
 
@@ -128,7 +128,7 @@ class App(CTk):
         self.attendance.grid(row=1, column=1, sticky="nsew", padx=(0, 5), pady=5)
         self.attenddesc = CTkLabel(
             self.attendance,
-            text="Start camera to capture\nbarcode/QRcode of\nstudents' IDs in real time.\n",
+            text="Start camera to capture\nbarcode/QRcode of students'\nIDs in real time.\n",
             justify="left",
         )
         self.attenddesc.grid(row=0, column=0, padx=5, pady=5)
@@ -146,7 +146,7 @@ class App(CTk):
         self.GrandReport.grid(row=1, column=2, sticky="nsew", padx=(5, 5), pady=5)
         self.GrandReportdesc = CTkLabel(
             self.GrandReport,
-            text="Generate class report \nthroughout the semester\n\n",
+            text="Generate class attendance\nreport throughout the\nsemester\n",
             justify="left",
         )
         self.GrandReportdesc.grid(row=0, column=0, padx=5, pady=5)
@@ -166,33 +166,67 @@ class App(CTk):
         )
         self.reportdesc = CTkLabel(
             self.report,
-            text="Generate   attendance report for a class in a particular day\n",
+            text="Approve a Leave application for a student\n",
             justify="left",
         )
         self.reportdesc.grid(row=0, column=0, padx=5, pady=5, columnspan=2)
 
-        self.datedesc = CTkLabel(self.report, text="date (e.g. 2024-01-01)")
-        self.datedesc.grid(row=1, column=0)
-        self.reportdate = CTkEntry(
-            self.report,
+        # daterange
+        self.daterange = CTkFrame(self.report, fg_color="transparent")
+        self.daterange.grid(row=1, column=0, sticky="nsew", rowspan=2, padx=(5, 5))
+
+        self.start = CTkLabel(
+            self.daterange, text="from: ", font=CTkFont(family="consolas")
+        )
+        self.start.grid(row=0, column=0)
+        self.startdate = CTkEntry(
+            self.daterange,
             placeholder_text="yyyy-mm-dd",
             placeholder_text_color="#3191DC",
             border_color="#3191DC",
-            font=CTkFont(family="consolas"),
+            font=CTkFont(family="consolas", weight="bold"),
             height=34,
             corner_radius=5,
             border_width=2,
         )
-        self.reportdate.grid(row=2, column=0, pady=(0, 5))
+        self.startdate.grid(row=0, column=1)
 
-        self.getreport = CTkButton(
+        self.end = CTkLabel(
+            self.daterange, text="To:   ", font=CTkFont(family="consolas")
+        )
+        self.end.grid(row=1, column=0, pady=(10, 0))
+        self.enddate = CTkEntry(
+            self.daterange,
+            placeholder_text="yyyy-mm-dd",
+            placeholder_text_color="#3191DC",
+            border_color="#3191DC",
+            font=CTkFont(family="consolas", weight="bold"),
+            height=34,
+            corner_radius=5,
+            border_width=2,
+        )
+        self.enddate.grid(row=1, column=1, pady=(10, 0))
+
+        self.sid = CTkEntry(
             self.report,
-            text=" REPORT",
-            command=self.onclick_day_report,
+            placeholder_text="Student ID",
+            placeholder_text_color="#3191DC",
+            border_color="#3191DC",
+            font=CTkFont(family="consolas", weight="bold"),
+            height=34,
+            corner_radius=5,
+            border_width=2,
+        )
+        self.sid.grid(row=1, column=1)
+
+        self.approvebtn = CTkButton(
+            self.report,
+            text="APPROVE",
+            command=self.approve,
             height=34,
             font=CTkFont(weight="bold"),
         )
-        self.getreport.grid(row=2, column=1, pady=(0, 5))
+        self.approvebtn.grid(row=2, column=1, pady=(10, 0))
 
     # functions
     def on_escape(event):
@@ -215,10 +249,13 @@ class App(CTk):
             for triplet in self.teacher["class"]:
                 existing = " ".join(triplet)
                 print(valid, existing)
-                if valid == existing: 
+                if valid == existing:
                     break
             else:
-                OpenPopup("INVALID", "Given class does not exist\nfor you. Select a different\ncombination.")
+                OpenPopup(
+                    "INVALID",
+                    "Given class does not exist\nfor you. Select a different\ncombination.",
+                )
                 return
 
             OpenPopup("Starting...", "Attendance taking started\nPress 'g' to Stop.")
@@ -247,27 +284,27 @@ class App(CTk):
             )
             OpenPopup(status, message)
 
-    def onclick_day_report(self):
-        date_text = self.reportdate.get()
-        dept_text = self.deptcb.get()
-        subject_text = self.subjcb.get()
-        semester_text = self.semcb.get()
-        if not all([date_text, dept_text, subject_text, semester_text]):
-            if not dept_text:
-                empty = "department"
-            elif not subject_text:
-                empty = "subject"
-            elif not semester_text:
-                empty = "semester"
-            elif not date_text:
-                empty = "date"
-            OpenPopup("ALERT", empty + " field is empty!")
-        else:
-            print("REPORT GENERATION FOR DATE:", date_text)
-            status, message = generateReport(
-                dept_text, "sem" + semester_text, subject_text, date_text
-            )
-            OpenPopup(status, message)
+    # def onclick_day_report(self):
+    #     date_text = self.reportdate.get()
+    #     dept_text = self.deptcb.get()
+    #     subject_text = self.subjcb.get()
+    #     semester_text = self.semcb.get()
+    #     if not all([date_text, dept_text, subject_text, semester_text]):
+    #         if not dept_text:
+    #             empty = "department"
+    #         elif not subject_text:
+    #             empty = "subject"
+    #         elif not semester_text:
+    #             empty = "semester"
+    #         elif not date_text:
+    #             empty = "date"
+    #         OpenPopup("ALERT", empty + " field is empty!")
+    #     else:
+    #         print("REPORT GENERATION FOR DATE:", date_text)
+    #         status, message = generateReport(
+    #             dept_text, "sem" + semester_text, subject_text, date_text
+    #         )
+    #         OpenPopup(status, message)
 
     def addNewUser(self):
         add_class_window = CTkToplevel(self)
@@ -282,26 +319,44 @@ class App(CTk):
 
         # Instantiate AddClass window within the Toplevel window
 
-
     def changeTheme(self):
         if self.switch_var.get() == "on":
             set_appearance_mode("light")
-            self.switch.configure(text = "Dark mode")
+            self.switch.configure(text="Dark mode")
         else:
             set_appearance_mode("dark")
-            self.switch.configure(text = "Light mode")
+            self.switch.configure(text="Light mode")
+
+    def approve(self):
+        fields = {
+            "Student ID": self.sid.get(),
+            "Department": self.deptcb.get(),
+            "Subject": self.subjcb.get(),
+            "Semester": "sem"+self.semcb.get(),
+            "Start date": self.startdate.get(),
+            "End date": self.enddate.get(),
+        }
+        for fld in fields:
+            if fields[fld] == "":
+                OpenPopup("ALERT", f"{fld} field is empty!")
+                return
+        status, msg = approveLeave(
+            fields["Student ID"],
+            fields["Department"],
+            fields["Semester"],
+            fields["Subject"],
+            fields["Start date"],
+            fields["End date"],
+        )
+        OpenPopup(status, msg)
 
 
 sample = {
-        "password": "5678",
-        "name": "Mr. Abcd Efg",
-        "is-admin": False,
-        "class":[
-            ["IT", "4", "IT2203"],
-            ["ETC", "7", "ET1102"],
-            ["CST", "6", "CST2107"]
-        ]
-    }
+    "password": "5678",
+    "name": "Mr. Abcd Efg",
+    "is-admin": True,
+    "class": [["IT", "4", "IT9999"], ["ETC", "7", "ET1102"], ["CST", "6", "CST2107"]],
+}
 
 # app = App(sample)
 # app.mainloop()
