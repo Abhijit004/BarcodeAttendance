@@ -11,11 +11,23 @@ subj_options = ["IT2201", "IT2202", "IT2203", "IT2204", "IT2205"]
 sem_options = [str(i) for i in range(1, 9)]
 
 class App(CTk):
-    def __init__(self, dept_options, subj_options, sem_options):
+    def __init__(self, teacher):
         super().__init__()
         self.title("Barcode Attendance")
-        self.geometry("645x434")
+        self.geometry("645x434+400+150")
         self.resizable(0, 0)
+        self.teacher = teacher
+
+        # Setting dropdown data
+        dept, sem, subj = set(), set(), set()
+        for i in self.teacher["class"]:
+            dept.add(i[0])
+            sem.add(i[1])
+            subj.add(i[2])
+        
+        dept_options = sorted(dept)
+        sem_options = sorted(sem)
+        subj_options = sorted(subj)
 
         # left pane
         self.leftpane = CTkFrame(self, width=200, height=900)
@@ -23,24 +35,24 @@ class App(CTk):
 
         self.heading = CTkLabel(
             self.leftpane,
-            font=CTkFont(size=30, weight="bold"),
-            text="Class Details",
+            font=CTkFont(size=20, weight="bold"),
+            text=f"Welcome\n{teacher['name']}",
         )
-        self.heading.grid(row=0, column=0, pady=5)
+        self.heading.grid(row=0, column=0)
         self.dept = CTkLabel(self.leftpane, text="Department")
-        self.dept.grid(row=1, column=0, padx=20, pady=(5, 0))
+        self.dept.grid(row=1, column=0, padx=20, pady = (10, 0))
         self.deptcb = CTkOptionMenu(
             self.leftpane,
             values=dept_options,
             width=200,
             dropdown_fg_color=["#3a7ebf", "#1f538d"],
             dropdown_hover_color=["#234567", "#1e2c40"],
-            dropdown_text_color=["#D5D9DE", "#D5D9DE"],
+            dropdown_text_color=["#fff", "#fff"],
         )
         self.deptcb.grid(row=2, column=0, padx=20, pady=0)
 
         self.sem = CTkLabel(self.leftpane, text="Semester")
-        self.sem.grid(row=3, column=0, padx=20, pady=(5, 0))
+        self.sem.grid(row=3, column=0, padx=20)
         self.semcb = CTkOptionMenu(
             self.leftpane,
             values=sem_options,
@@ -52,7 +64,7 @@ class App(CTk):
         self.semcb.grid(row=4, column=0, padx=20, pady=0)
 
         self.subj = CTkLabel(self.leftpane, text="Subject Code")
-        self.subj.grid(row=5, column=0, padx=20, pady=(5, 0))
+        self.subj.grid(row=5, column=0, padx=20)
         self.subjcb = CTkOptionMenu(
             self.leftpane,
             values=subj_options,
@@ -65,10 +77,12 @@ class App(CTk):
         self.deptcb.set("")
         self.semcb.set("")
         self.subjcb.set("")
-        self.switch_var = StringVar(value="off")
+
+        set_appearance_mode("light")
+        self.switch_var = StringVar(value="on")
         self.switch = CTkSwitch(
             self.leftpane,
-            text="Light Mode",
+            text="Light mode",
             command=self.changeTheme,
             variable=self.switch_var,
             onvalue="on",
@@ -120,7 +134,7 @@ class App(CTk):
         self.GrandReportdesc.grid(row=0, column=0, padx=5, pady=5)
         self.getGrandReport = CTkButton(
             self.GrandReport,
-            text="GRAND REPORT",
+            text="CLASS REPORT",
             command=self.onclick_class_report,
             height=34,
             font=CTkFont(weight="bold"),
@@ -146,8 +160,8 @@ class App(CTk):
             border_color="#3191DC",
             font=CTkFont(family="consolas"),
             height=34,
-            corner_radius=12,
-            border_width=3,
+            corner_radius=5,
+            border_width=2,
         )
         self.reportdate.grid(row=2, column=0, pady=(0, 5))
 
@@ -159,10 +173,6 @@ class App(CTk):
             font=CTkFont(weight="bold"),
         )
         self.getreport.grid(row=2, column=1, pady=(0, 5))
-
-
-    def switch_event(self):
-        print("switch toggled, current value:", self.switch_var.get())
 
     # functions
     def on_escape(event):
@@ -181,6 +191,15 @@ class App(CTk):
                 empty = "semester"
             OpenPopup("ALERT", empty + " field is empty!")
         else:
+            valid = f"{dept_text} {semester_text} {subject_text}"
+            for triplet in self.teacher["class"]:
+                existing = " ".join(triplet)
+                if valid !=existing:
+                    OpenPopup("INVALID", "Given class does not exist\nfor you. Select a different\ncombination.")
+                    return
+
+
+
             OpenPopup("Starting...", "Attendance taking started\nPress 'g' to Stop.")
             print("ATTENDANCE TAKING STARTED\n")
             status, message = take_attendance(
@@ -229,8 +248,23 @@ class App(CTk):
             )
             OpenPopup(status, message)
     def changeTheme(self):
-        set_appearance_mode("light" if self.switch_var.get() == "on" else "dark")
+        if self.switch_var.get() == "on":
+            set_appearance_mode("light")
+            self.switch.configure(text = "Light mode")
+        else:
+            set_appearance_mode("dark")
+            self.switch.configure(text = "Dark mode")
 
 
-app = App(dept_options, subj_options, sem_options)
+sample = {
+        "password": "1234",
+        "name": "Mr. Prasun Ghosal",
+        "class":[
+            ["IT", "4", "IT2203"],
+            ["CST", "6", "CS1102"],
+            ["IT", "6", "IT2157"]
+        ]
+    }
+
+app = App(sample)
 app.mainloop()

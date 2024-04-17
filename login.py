@@ -1,6 +1,8 @@
 from customtkinter import *
 from PIL import Image
 from popupMessage import OpenPopup
+import json
+from app import App
 
 set_default_color_theme("assets/gui-theme.json")
 # set_appearance_mode("light")
@@ -9,11 +11,12 @@ set_default_color_theme("assets/gui-theme.json")
 class Login(CTk):
     def __init__(self):
         super().__init__()
-        self.geometry("645x434")
+        self.geometry("645x434+400+150")
         self.resizable(0, 0)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
+        self.title("Barcode Attendance")
 
         # left-pic
         self.img = Image.open("assets/img-login.png")
@@ -32,15 +35,15 @@ class Login(CTk):
 
         # greet
         self.greet = CTkLabel(
-            self.frame, text="Welcome Back!", font=CTkFont(size=32, weight="bold")
+            self.frame, text="Welcome!", font=CTkFont(size=32, weight="bold")
         )
-        self.greet.grid(row=0, column=0, padx=15, pady=(50, 0), sticky="ew")
+        self.greet.grid(row=0, column=0, padx=(0,65), pady=(50, 0), sticky="ew")
         self.byline = CTkLabel(
             self.frame,
             text="Please enter your details",
             font=CTkFont(size=18, slant="italic"),
         )
-        self.byline.grid(row=1, column=0)
+        self.byline.grid(row=1, column=0, padx=(0,15))
 
         self.ask = CTkFrame(self.frame, fg_color="transparent")
         self.ask.grid(row=2, column=0, pady=(30, 0), padx=50, sticky="ew")
@@ -94,7 +97,33 @@ class Login(CTk):
     def themeswap(self):
         set_appearance_mode("dark" if self.switch_var.get() == "off" else "light")
     def logincheck(self):
-        OpenPopup("Hello", "This is a success")
+        tid = self.teacheridInput.get()
+        pwd = self.passwordInput.get()
+        if not tid:
+            OpenPopup("ALERT", "Teacher ID missing!")
+            return
+        elif not pwd:
+            OpenPopup("ALERT", "Passsword missing!")
+            return
+        
+        f = open("teacher.json", "r")
+        teacher = json.load(f)
+        f.close()
+
+        if tid not in teacher:
+            OpenPopup("ERROR", f"Teacher ID {tid} does not exist!")
+            return
+        if teacher[tid]["password"] != pwd:
+            OpenPopup("ERROR", "Wrong password. Please try again.")
+            return 
+
+        self.destroy()
+        run = App(teacher[tid])
+        run.mainloop()
+        
+
+
+        
 
 
 app = Login()
