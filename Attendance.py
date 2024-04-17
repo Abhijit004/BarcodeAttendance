@@ -1,11 +1,10 @@
 import json
 import datetime
-from pickle import load, dump
 
 def write_to_json(data, date, filename):
     try:
-        f = open('attendance/'+filename, "rb")
-        filedata = load(f)
+        f = open('attendance/'+filename, "r")
+        filedata = json.load(f)
         f.close()
         print("prev", filedata)
     except:
@@ -16,9 +15,9 @@ def write_to_json(data, date, filename):
     else:
         filedata[date] = data
     
-    f = open('attendance/'+filename, "wb")
+    f = open('attendance/'+filename, "w")
     print('to write: ', filedata)
-    dump(filedata, f)
+    json.dump(filedata, f)
     f.close()
 
 
@@ -45,7 +44,7 @@ def take_attendance(dept, sem, subject):
     idmap = json.loads(idfile.read())
     idfile.close()
     
-    outfile = dept+'_'+sem+'_'+subject + '.attendinfo'
+    outfile = dept+'_'+sem+'_'+subject + '.json'
 
     data = take_data(idmap)
     write_to_json(data, date, outfile)

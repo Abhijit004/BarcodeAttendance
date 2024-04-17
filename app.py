@@ -4,6 +4,7 @@ from popupMessage import OpenPopup
 from Attendance import take_attendance, approveLeave
 from report import *
 from addClass import AddClass
+from changePwd import changePwd
 
 set_default_color_theme("assets/gui-theme.json")
 dept_options = ["IT", "CST", "EE", "MET", "MIN", "MECH", "CIVIL", "AM"]
@@ -12,12 +13,13 @@ sem_options = [str(i) for i in range(1, 9)]
 
 
 class App(CTk):
-    def __init__(self, teacher):
+    def __init__(self, teacher, tid):
         super().__init__()
         self.title("Barcode Attendance")
         self.geometry("645x434+400+150")
         self.resizable(0, 0)
         self.teacher = teacher
+        self.tid = tid
 
         # Setting dropdown data
         dept, sem, subj = set(), set(), set()
@@ -82,6 +84,16 @@ class App(CTk):
         self.subjcb.set("")
 
         # set_appearance_mode("light")
+        self.changepwd = CTkButton(
+            self.leftpane,
+            text="CHANGE PASSWORD",
+            height=35,
+            font=CTkFont(weight="bold"),
+            state="normal",
+            text_color_disabled="#152d47",
+            command=self.changepwd
+        )
+        self.changepwd.grid(row=8, column=0, padx=20,pady=(54, 10), sticky="ew")
         self.adduser = CTkButton(
             self.leftpane,
             text="ADD USER",
@@ -91,7 +103,7 @@ class App(CTk):
             text_color_disabled="#152d47",
             command=self.addNewUser,
         )
-        self.adduser.grid(row=8, column=0, padx=20, pady=(84, 10), sticky="ew")
+        self.adduser.grid(row=9, column=0, padx=20, sticky="ew")
 
         self.switch_var = StringVar(value="off")
         self.switch = CTkSwitch(
@@ -102,7 +114,7 @@ class App(CTk):
             onvalue="on",
             offvalue="off",
         )
-        self.switch.grid(row=9, column=0, padx=20, pady=(10, 10))
+        self.switch.grid(row=10, column=0, padx=20, pady=(10, 10))
 
         # image
         self.logo = Image.open("assets/Image.png")
@@ -188,6 +200,7 @@ class App(CTk):
             height=34,
             corner_radius=5,
             border_width=2,
+            state="normal" if teacher["is-admin"] else "disabled"
         )
         self.startdate.grid(row=0, column=1)
 
@@ -204,6 +217,7 @@ class App(CTk):
             height=34,
             corner_radius=5,
             border_width=2,
+            state="normal" if teacher["is-admin"] else "disabled"
         )
         self.enddate.grid(row=1, column=1, pady=(10, 0))
 
@@ -216,6 +230,7 @@ class App(CTk):
             height=34,
             corner_radius=5,
             border_width=2,
+            state="normal" if teacher["is-admin"] else "disabled"
         )
         self.sid.grid(row=1, column=1)
 
@@ -225,6 +240,7 @@ class App(CTk):
             command=self.approve,
             height=34,
             font=CTkFont(weight="bold"),
+            state="normal" if teacher["is-admin"] else "disabled"
         )
         self.approvebtn.grid(row=2, column=1, pady=(10, 0))
 
@@ -319,7 +335,19 @@ class App(CTk):
         add_class_window.lift()
         add_class_window.focus_force()
 
-        # Instantiate AddClass window within the Toplevel window
+    def changepwd(self):
+        change_pwd_window = CTkToplevel(self, fg_color=["#F1F3F8", "#1E2024"])
+        change_pwd_window.title("Change password")
+        change_pwd_window.geometry("+450+200")
+
+        change_pwd_window.resizable(0, 0)
+        change_pwd_window.grid_columnconfigure(0, weight=1)
+        change_pwd_window.grid_rowconfigure(0, weight=1)
+        change_pwd_app = changePwd(change_pwd_window, self.tid)
+        change_pwd_app.grid(row=0, column=0)
+        change_pwd_app.grab_set()
+        change_pwd_window.lift()
+        change_pwd_window.focus_force()
 
     def changeTheme(self):
         if self.switch_var.get() == "on":
@@ -360,5 +388,5 @@ sample = {
     "class": [["IT", "4", "IT9999"], ["ETC", "7", "ET1102"], ["CST", "6", "CST2107"]],
 }
 
-app = App(sample)
-app.mainloop()
+# app = App(sample, "Soumyajit")
+# app.mainloop()

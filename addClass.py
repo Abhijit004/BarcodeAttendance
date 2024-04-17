@@ -2,7 +2,6 @@ from customtkinter import *
 from PIL import Image
 from popupMessage import OpenPopup
 import json
-from pickle import load, dump
 
 set_default_color_theme("assets/gui-theme.json")
 
@@ -193,8 +192,8 @@ class AddClass(CTkFrame):
             OpenPopup("ALERT", "Semester missing")
             return
 
-        f = open("bin.teacher", "rb+")
-        allData = load(f)
+        f = open("teacher.json", "r+")
+        allData = json.load(f)
 
         newData = {"password": "t123", "name": tname, "class": [[dept, sem, subject]], "is-admin": True if admin.lower()=="on" else False}
 
@@ -203,7 +202,7 @@ class AddClass(CTkFrame):
         else:
             allData[tid]["class"].append([dept, sem, subject])
         f.seek(0)
-        dump(allData, f)
+        json.dump(allData, f)
         f.truncate()
         f.close()
         OpenPopup("SUCCESS", "Teacher data added\nSuccessfully!")

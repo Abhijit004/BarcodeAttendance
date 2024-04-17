@@ -3,7 +3,6 @@ from PIL import Image
 from popupMessage import OpenPopup
 import json
 from app import App
-from pickle import dump, load
 
 set_default_color_theme("assets/gui-theme.json")
 
@@ -105,8 +104,8 @@ class Login(CTk):
             OpenPopup("ALERT", "Passsword missing!")
             return
         
-        f = open("bin.teacher", "rb")
-        teacher = load(f)
+        f = open("teacher.json", "r")
+        teacher = json.load(f)
         f.close()
 
 
@@ -119,7 +118,7 @@ class Login(CTk):
             return 
 
         self.destroy()
-        run = App(teacher[tid])
+        run = App(teacher[tid], tid)
         run.mainloop()
         
 app = Login()

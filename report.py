@@ -1,5 +1,4 @@
 import os, csv, json
-from pickle import load
 
 def generateReport(dept, sem, subject, date):
     # no longer needed now.
@@ -42,8 +41,8 @@ def grandReport(dept, sem, subject):
         res.append({"Reg No": id, "Name": name})
 
     try:
-        classfile = open(f"attendance/{filename}.attendinfo", "rb")
-        classfiledata = load(classfile)
+        classfile = open(f"attendance/{filename}.json", "r")
+        classfiledata = json.load(classfile)
         classfile.close()
     except:
         return ("Empty", "No data available!")
