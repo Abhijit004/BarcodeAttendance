@@ -120,9 +120,5 @@ class Login(CTk):
         run.mainloop()
         
 
-
-        
-
-
 app = Login()
 app.mainloop()
