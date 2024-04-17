@@ -117,9 +117,10 @@ class App(CTk):
         self.switch.grid(row=10, column=0, padx=20, pady=(10, 10))
 
         # image
-        self.logo = Image.open("assets/Image.png")
+        self.logoLight = Image.open("assets/main-light.png")
+        self.logoDark = Image.open("assets/main-dark.png")
 
-        self.img = CTkFrame(self, fg_color=["#4a98e1", "#3a79bf"])
+        self.img = CTkFrame(self, fg_color="transparent")
         self.img.grid(
             row=0, column=1, padx=(0, 5), pady=(10, 3), sticky="nsew", columnspan=2
         )
@@ -129,10 +130,10 @@ class App(CTk):
             self.img,
             text="",
             image=CTkImage(
-                light_image=self.logo, dark_image=self.logo, size=(300, 100)
+                light_image=self.logoLight, dark_image=self.logoDark, size=(380, 144)
             ),
         )
-        self.imgcontent.grid(row=0, column=0, padx=5, pady=8)
+        self.imgcontent.grid(row=0, column=0)
 
         # right pane
         # attendance taking
@@ -172,19 +173,19 @@ class App(CTk):
         self.getGrandReport.grid(row=1, column=0, pady=(0, 5))
 
         # report generation
-        self.report = CTkFrame(self)
-        self.report.grid(
+        self.appln = CTkFrame(self)
+        self.appln.grid(
             row=2, column=1, columnspan=2, sticky="nsew", padx=(0, 5), pady=5
         )
-        self.reportdesc = CTkLabel(
-            self.report,
+        self.applndesc = CTkLabel(
+            self.appln,
             text="Approve a Leave application for a student\n",
             justify="left",
         )
-        self.reportdesc.grid(row=0, column=0, padx=5, pady=5, columnspan=2)
+        self.applndesc.grid(row=0, column=0, padx=5, pady=5, columnspan=2, sticky="ew")
 
         # daterange
-        self.daterange = CTkFrame(self.report, fg_color="transparent")
+        self.daterange = CTkFrame(self.appln, fg_color="transparent")
         self.daterange.grid(row=1, column=0, sticky="nsew", rowspan=2, padx=(5, 5))
 
         self.start = CTkLabel(
@@ -222,7 +223,7 @@ class App(CTk):
         self.enddate.grid(row=1, column=1, pady=(10, 0))
 
         self.sid = CTkEntry(
-            self.report,
+            self.appln,
             placeholder_text="Student ID",
             placeholder_text_color="#3191DC",
             border_color="#3191DC",
@@ -235,12 +236,13 @@ class App(CTk):
         self.sid.grid(row=1, column=1)
 
         self.approvebtn = CTkButton(
-            self.report,
+            self.appln,
             text="APPROVE",
             command=self.approve,
             height=34,
             font=CTkFont(weight="bold"),
-            state="normal" if teacher["is-admin"] else "disabled"
+            state="normal" if teacher["is-admin"] else "disabled",
+            text_color_disabled="#152d47",
         )
         self.approvebtn.grid(row=2, column=1, pady=(10, 0))
 
