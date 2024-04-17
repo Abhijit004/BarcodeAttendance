@@ -10,8 +10,9 @@ dept_options = ["IT", "CST", "EE", "MET", "MIN", "MECH", "CIVIL", "AM"]
 subj_options = ["IT2201", "IT2202", "IT2203", "IT2204", "IT2205"]
 sem_options = [str(i) for i in range(1, 9)]
 
+
 class App(CTk):
-    def __init__(self, teacher):
+    def __init__(self, teacher, isAdmin=0):
         super().__init__()
         self.title("Barcode Attendance")
         self.geometry("645x434+400+150")
@@ -31,7 +32,9 @@ class App(CTk):
 
         # left pane
         self.leftpane = CTkFrame(self, width=200, height=900)
-        self.leftpane.grid(row=0, column=0, padx=10, pady=(10, 6), rowspan=3, sticky="nsew")
+        self.leftpane.grid(
+            row=0, column=0, padx=10, pady=(10, 6), rowspan=3, sticky="nsew"
+        )
 
         self.heading = CTkLabel(
             self.leftpane,
@@ -78,8 +81,19 @@ class App(CTk):
         self.semcb.set("")
         self.subjcb.set("")
 
-        set_appearance_mode("light")
-        self.switch_var = StringVar(value="on")
+        # set_appearance_mode("light")
+        self.adduser = CTkButton(
+            self.leftpane,
+            text="ADD USER",
+            height=35,
+            font=CTkFont(weight="bold"),
+            state="normal" if isAdmin else "disabled",
+            text_color_disabled="#152d47",
+            # command = self.addNewUser
+        )
+        self.adduser.grid(row=8, column=0, padx=20, pady=(84, 10), sticky="ew")
+
+        self.switch_var = StringVar(value="off")
         self.switch = CTkSwitch(
             self.leftpane,
             text="Light mode",
@@ -88,19 +102,23 @@ class App(CTk):
             onvalue="on",
             offvalue="off",
         )
-        self.switch.grid(row=11, column=0, padx=20, pady=(142, 10))
+        self.switch.grid(row=9, column=0, padx=20, pady=(10, 10))
 
         # image
         self.logo = Image.open("assets/Image.png")
 
         self.img = CTkFrame(self, fg_color=["#4a98e1", "#3a79bf"])
-        self.img.grid(row=0, column=1, padx=(0, 5), pady=(10, 3), sticky="nsew", columnspan=2)
+        self.img.grid(
+            row=0, column=1, padx=(0, 5), pady=(10, 3), sticky="nsew", columnspan=2
+        )
         self.img.grid_columnconfigure(0, weight=1)
         self.img.grid_rowconfigure(0, weight=1)
         self.imgcontent = CTkLabel(
             self.img,
             text="",
-            image=CTkImage(light_image=self.logo, dark_image=self.logo, size=(300, 100)),
+            image=CTkImage(
+                light_image=self.logo, dark_image=self.logo, size=(300, 100)
+            ),
         )
         self.imgcontent.grid(row=0, column=0, padx=5, pady=8)
 
@@ -143,7 +161,9 @@ class App(CTk):
 
         # report generation
         self.report = CTkFrame(self)
-        self.report.grid(row=2, column=1, columnspan=2, sticky="nsew", padx=(0, 5), pady=5)
+        self.report.grid(
+            row=2, column=1, columnspan=2, sticky="nsew", padx=(0, 5), pady=5
+        )
         self.reportdesc = CTkLabel(
             self.report,
             text="Generate attendance report for a class in a particular day\n",
@@ -207,7 +227,6 @@ class App(CTk):
             )
             OpenPopup(status, message)
 
-
     def onclick_class_report(self):
         dept_text = self.deptcb.get()
         subject_text = self.subjcb.get()
@@ -222,9 +241,10 @@ class App(CTk):
             OpenPopup("ALERT", empty + " field is empty!")
         else:
             print("STARTED CLASS REPORT GENERATION...")
-            status, message = grandReport(dept_text, "sem" + semester_text, subject_text)
+            status, message = grandReport(
+                dept_text, "sem" + semester_text, subject_text
+            )
             OpenPopup(status, message)
-
 
     def onclick_day_report(self):
         date_text = self.reportdate.get()
@@ -247,13 +267,14 @@ class App(CTk):
                 dept_text, "sem" + semester_text, subject_text, date_text
             )
             OpenPopup(status, message)
+
     def changeTheme(self):
         if self.switch_var.get() == "on":
             set_appearance_mode("light")
-            self.switch.configure(text = "Light mode")
+            self.switch.configure(text = "Dark mode")
         else:
             set_appearance_mode("dark")
-            self.switch.configure(text = "Dark mode")
+            self.switch.configure(text = "Light mode")
 
 
 sample = {
@@ -266,5 +287,5 @@ sample = {
         ]
     }
 
-app = App(sample)
-app.mainloop()
+# app = App(sample)
+# app.mainloop()

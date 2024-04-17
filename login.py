@@ -5,8 +5,6 @@ import json
 from app import App
 
 set_default_color_theme("assets/gui-theme.json")
-# set_appearance_mode("light")
-
 
 class Login(CTk):
     def __init__(self):
