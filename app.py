@@ -3,6 +3,7 @@ from PIL import Image
 from popupMessage import OpenPopup
 from Attendance import take_attendance
 from report import *
+from addClass import AddClass
 
 set_default_color_theme("assets/gui-theme.json")
 dept_options = ["IT", "CST", "EE", "MET", "MIN", "MECH", "CIVIL", "AM"]
@@ -88,7 +89,7 @@ class App(CTk):
             font=CTkFont(weight="bold"),
             state="normal" if teacher["is-admin"] else "disabled",
             text_color_disabled="#152d47",
-            # command = self.addNewUser
+            command = self.addNewUser
         )
         self.adduser.grid(row=8, column=0, padx=20, pady=(84, 10), sticky="ew")
 
@@ -165,7 +166,7 @@ class App(CTk):
         )
         self.reportdesc = CTkLabel(
             self.report,
-            text="Generate attendance report for a class in a particular day\n",
+            text="Generate   attendance report for a class in a particular day\n",
             justify="left",
         )
         self.reportdesc.grid(row=0, column=0, padx=5, pady=5, columnspan=2)
@@ -267,6 +268,20 @@ class App(CTk):
                 dept_text, "sem" + semester_text, subject_text, date_text
             )
             OpenPopup(status, message)
+
+    def addNewUser(self):
+        add_class_window = CTkToplevel(self)
+        add_class_window.title("Add Class Window")
+        add_class_window.geometry("645x434+450+200")
+        add_class_window.resizable(0, 0)
+        add_class_app = AddClass(add_class_window)
+        add_class_app.grid(row=0, column=0)
+        add_class_app.grab_set()
+        add_class_window.lift()
+        add_class_window.focus_force()
+
+        # Instantiate AddClass window within the Toplevel window
+
 
     def changeTheme(self):
         if self.switch_var.get() == "on":

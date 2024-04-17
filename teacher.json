@@ -1,22 +1,24 @@
 {
-    "T1203":{
+    "T1203": {
+        "is-admin": true,
         "password": "1234",
         "name": "Mr. Prasun Ghosal",
-        "is-admin": true,
-        "class":[
+        "class": [
             ["IT", "4", "IT2203"],
             ["CST", "6", "CS1102"],
-            ["IT", "6", "IT2157"]
+            ["IT", "6", "IT2157"],
+            ["CST", "8", "IT2204"]
         ]
     },
-    "T1508":{
+    "T1508": {
+        "is-admin": false,
         "password": "5678",
         "name": "Mr. Abcd Efg",
-        "is-admin": false,
-        "class":[
-            ["IT", "4", "IT2203"],
+        "class": [
+            ["ETC", "4", "ET2203"],
             ["ETC", "7", "ET1102"],
-            ["CST", "6", "CST2107"]
+            ["IT", "6", "IT2107"]
         ]
-    }
+    },
+    "SOmeone TCT": { "password": "t123", "name": "qwerty", "class": [["ME", "8", "IT2202"]] }
 }
