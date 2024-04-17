@@ -3,7 +3,7 @@ class OpenPopup(CTkToplevel):
     def __init__(self, title, message):
         super().__init__()
         self.title(title)
-        self.geometry("250x150")
+        self.geometry("250x150+700+367")
         self.focus_force()
         self.grab_set()
         self.resizable(0, 0)
