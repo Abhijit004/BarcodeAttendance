@@ -23,7 +23,7 @@ def generateReport(dept, sem, subject, date):
     return ("Success", f"{filename}'\nhas been created successfully.")
 
 
-def grandReport(dept, sem, subject):
+def grandReport(dept, sem, subject, outputdir):
     filename = dept + "_" + sem + "_" + subject
     try:
         f = open(f"idmap/{dept}_{sem}.json")
@@ -59,8 +59,9 @@ def grandReport(dept, sem, subject):
         row["Percentage"] = row["Total"]*100 / totWorkingDays
     field_names = list(res[0].keys())
 
-    with open(f"output/{filename}.csv", "w", newline="") as csv_file:
+    with open(f"{outputdir}/{filename}.csv", "w", newline="") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
         writer.writeheader()
         writer.writerows(res)
-    return ("Success", f"Report generation completed!\nin output/{filename}.csv")
+    j = outputdir.rfind('/')
+    return ("Success", f"Report generation completed!\nin {outputdir[j+1:]}/{filename}.csv")

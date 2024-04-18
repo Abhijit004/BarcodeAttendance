@@ -91,9 +91,9 @@ class App(CTk):
             font=CTkFont(weight="bold"),
             state="normal",
             text_color_disabled="#152d47",
-            command=self.changepwd
+            command=self.changepwd,
         )
-        self.changepwd.grid(row=8, column=0, padx=20,pady=(54, 10), sticky="ew")
+        self.changepwd.grid(row=8, column=0, padx=20, pady=(54, 10), sticky="ew")
         self.adduser = CTkButton(
             self.leftpane,
             text="ADD USER",
@@ -201,7 +201,7 @@ class App(CTk):
             height=34,
             corner_radius=5,
             border_width=2,
-            state="normal" if teacher["is-admin"] else "disabled"
+            state="normal" if teacher["is-admin"] else "disabled",
         )
         self.startdate.grid(row=0, column=1)
 
@@ -218,7 +218,7 @@ class App(CTk):
             height=34,
             corner_radius=5,
             border_width=2,
-            state="normal" if teacher["is-admin"] else "disabled"
+            state="normal" if teacher["is-admin"] else "disabled",
         )
         self.enddate.grid(row=1, column=1, pady=(10, 0))
 
@@ -231,7 +231,7 @@ class App(CTk):
             height=34,
             corner_radius=5,
             border_width=2,
-            state="normal" if teacher["is-admin"] else "disabled"
+            state="normal" if teacher["is-admin"] else "disabled",
         )
         self.sid.grid(row=1, column=1)
 
@@ -295,34 +295,46 @@ class App(CTk):
             elif not semester_text:
                 empty = "semester"
             OpenPopup("ALERT", empty + " field is empty!")
-        else:
-            print("STARTED CLASS REPORT GENERATION...")
+            return
+        report_window = CTkToplevel(self, fg_color=["#F1F3F8", "#1E2024"])
+        report_window.title("Select Folder")
+        report_window.geometry("270x110+450+200")
+        report_window.resizable(0, 0)
+        report_window.grid_columnconfigure(0, weight=1)
+        report_window.grid_columnconfigure(1, weight=1)
+        report_window.grid_rowconfigure(0, weight=1)
+        report_window.grid_rowconfigure(1, weight=1)
+        report_window.grid_rowconfigure(2, weight=1)
+
+        report_window.grab_set()
+        report_window.lift()
+        report_window.focus_force()
+
+        label = CTkLabel(report_window, text="Select a folder to save your report")
+        label.grid(row=0, column=0, columnspan=2, padx=5, pady=(0, 0), sticky="nsew")
+        foldername = CTkLabel(report_window, text="")
+        foldername.grid(row=1, column=0, columnspan=2, padx=5, pady=(0, 0), sticky="ew")
+        
+        def setfolderpath():
+            path = filedialog.askdirectory()
+            if path:
+                i = path.rfind('/')
+                foldername.configure(text=path)
+        def startReport():
+            if foldername.cget("text") == '':
+                OpenPopup("Empty", "Please Select a Folder")
+                return
+            report_window.destroy()
             status, message = grandReport(
-                dept_text, "sem" + semester_text, subject_text
+                dept_text, "sem" + semester_text, subject_text, foldername.cget("text")
             )
             OpenPopup(status, message)
 
-    # def onclick_day_report(self):
-    #     date_text = self.reportdate.get()
-    #     dept_text = self.deptcb.get()
-    #     subject_text = self.subjcb.get()
-    #     semester_text = self.semcb.get()
-    #     if not all([date_text, dept_text, subject_text, semester_text]):
-    #         if not dept_text:
-    #             empty = "department"
-    #         elif not subject_text:
-    #             empty = "subject"
-    #         elif not semester_text:
-    #             empty = "semester"
-    #         elif not date_text:
-    #             empty = "date"
-    #         OpenPopup("ALERT", empty + " field is empty!")
-    #     else:
-    #         print("REPORT GENERATION FOR DATE:", date_text)
-    #         status, message = generateReport(
-    #             dept_text, "sem" + semester_text, subject_text, date_text
-    #         )
-    #         OpenPopup(status, message)
+        fileopen = CTkButton(report_window, text="SELECT FOLDER", command = setfolderpath, font=CTkFont(weight="bold"))
+        fileopen.grid(row=2, column=0, padx=5, sticky="nsew", pady=(0, 10))
+        confirm = CTkButton(report_window, text="CONFIRM", command = startReport, font=CTkFont(weight="bold"))
+        confirm.grid(row=2, column=1, padx=5, sticky="nsew", pady=(0, 10))
+        print("STARTED CLASS REPORT GENERATION...")
 
     def addNewUser(self):
         add_class_window = CTkToplevel(self, fg_color=["#F1F3F8", "#1E2024"])
