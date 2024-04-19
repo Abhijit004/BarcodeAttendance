@@ -397,10 +397,10 @@ class App(CTk):
 
 sample = {
     "password": "5678",
-    "name": "Mr. Abcd Efg",
+    "name": "Mr. Prasun Ghosal",
     "is-admin": True,
     "class": [["IT", "4", "IT9999"], ["ETC", "7", "ET1102"], ["CST", "6", "CST2107"]],
 }
 
-# app = App(sample, "Soumyajit")
-# app.mainloop()
+app = App(sample, "Soumyajit")
+app.mainloop()
